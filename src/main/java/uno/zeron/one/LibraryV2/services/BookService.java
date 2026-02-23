@@ -10,57 +10,57 @@ import uno.zeron.one.LibraryV2.repositories.BorrowerTransactionRepository;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BookService {
-	BookRepository bookRepository; 
-	BorrowerRepository borrowerRepository;
-	BorrowerTransactionRepository btRepository;
-	
-	
+	private final BookRepository bookRepository; 
 	
 	public BookService(BookRepository bookRepository) {
 		this.bookRepository = bookRepository;
 	}
 	
+	@Transactional(readOnly = true)
 	public List<Book> getAllAvailableBooks() {
-		return bookRepository.findByIsBorrowedFalse();
+		return bookRepository.findByIsAvailableTrue();
 	}
 	
+	@Transactional(readOnly = true)
 	public List<Book> getAllBooks() {
 		return bookRepository.findAll();
 	}
+	
+	@Transactional
 	public Book registerNewBook(Book book) {
-		
-		//validate if the existing book has the same Title and Author with the new Book entry
 		Book existing = bookRepository.findByIsbn(book.getIsbn()).stream().findFirst().orElse(null);
 		if(existing != null) {
 			if(!existing.getTitle().equals(book.getTitle()) || !existing.getAuthor().equals(book.getAuthor())) {
-				throw new RuntimeException("ISBN mismatch: Book Title and Author does not match existing records");
+				throw new RuntimeException("ISBN mismatch: Book Title or Author does not match existing records");
 			}
-			return bookRepository.save(existing);
 		}
 		return bookRepository.save(book);
 	}
 	
-	public BorrowTransaction borrowBook(BorrowTransaction bt) {
+	public Book getAvailableBook(Long bookid) {
 		
-		BorrowTransaction exist = btRepository.findByBookidAndReturnDateIsNull(bt.getBookId()).stream().findFirst().orElse(null);
-		if(exist != null) {
-			throw new RuntimeException("Book is already borrowed");
-		}
-		btRepository.save(bt);
-		return bt;
+		Book book = bookRepository.findById(bookid).stream().filter(Book::isAvailable).findFirst().orElseThrow(() -> new RuntimeException("Book is not available"));
+		return book;
 	}
 	
-	public BorrowTransaction returnBook(BorrowTransaction bt) {
-		BorrowTransaction exist = btRepository.findByBookidAndReturnDateIsNull(bt.getBookId()).stream().findFirst().orElse(null);
-		if(exist == null) {
-			throw new RuntimeException("Book is not borrowed");
+	public void setBookAvailability(Book book, boolean isAvailable) {
+		if(book.getId() == null) {
+			throw new RuntimeException("Book does not exist");
 		}
-		exist.setReturnDate(bt.getReturnDate());
-		btRepository.save(exist);
-		return exist;
+		book.setAvailable(isAvailable);
+		bookRepository.save(book);
+		
+	}
+	
+	public void setBookAvailabilityById(Long id, boolean isAvailable) {
+		Book book = bookRepository.findById(id).stream().findFirst().orElseThrow(() -> new RuntimeException("Book does not exist"));
+		book.setAvailable(isAvailable);
+		bookRepository.save(book);
+		
 	}
 	
 	

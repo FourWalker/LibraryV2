@@ -21,4 +21,8 @@ public class BorrowerService {
 		}
 		return borrowerRepository.save(borrower);
 	}
+	public Borrower findById(Long id) {
+		Borrower existing = borrowerRepository.findById(id).stream().findFirst().orElseThrow(() -> new RuntimeException("Borrower does not exist"));
+		return existing;
+	}
 }

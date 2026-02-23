@@ -8,5 +8,6 @@ import uno.zeron.one.LibraryV2.entities.Book;
 
 public interface BookRepository extends JpaRepository<Book, Long>{
 	List<Book> findByIsbn(String isbn);
-	List<Book> findByIsBorrowedFalse();
+	List<Book> findByIsAvailableTrue();
+	List<Book> findByIdAndIsAvailableTrue(Long id);
 }
