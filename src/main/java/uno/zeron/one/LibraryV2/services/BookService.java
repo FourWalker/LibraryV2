@@ -1,16 +1,12 @@
 package uno.zeron.one.LibraryV2.services;
 
-import uno.zeron.one.LibraryV2.entities.Book;
-import uno.zeron.one.LibraryV2.entities.BorrowTransaction;
-import uno.zeron.one.LibraryV2.entities.Borrower;
-import uno.zeron.one.LibraryV2.repositories.BookRepository;
-import uno.zeron.one.LibraryV2.repositories.BorrowerRepository;
-import uno.zeron.one.LibraryV2.repositories.BorrowerTransactionRepository;
-
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uno.zeron.one.LibraryV2.dto.book.BookRegistrationRequest;
+import uno.zeron.one.LibraryV2.entities.Book;
+import uno.zeron.one.LibraryV2.repositories.BookRepository;
+
+import java.util.List;
 
 @Service
 public class BookService {
@@ -22,42 +18,50 @@ public class BookService {
 	
 	@Transactional(readOnly = true)
 	public List<Book> getAllAvailableBooks() {
-		return bookRepository.findByIsAvailableTrue();
+		return bookRepository.findByIsAvailable(true);
 	}
-	
+
 	@Transactional(readOnly = true)
 	public List<Book> getAllBooks() {
 		return bookRepository.findAll();
 	}
+
 	
 	@Transactional
-	public Book registerNewBook(Book book) {
-		Book existing = bookRepository.findByIsbn(book.getIsbn()).stream().findFirst().orElse(null);
-		if(existing != null) {
-			if(!existing.getTitle().equals(book.getTitle()) || !existing.getAuthor().equals(book.getAuthor())) {
+	public Book registerNewBook(BookRegistrationRequest request) {
+		bookRepository.findByIsbn(request.isbn()).stream().findFirst().ifPresent(existing -> {
+
+			boolean titleMatched = existing.getTitle().equalsIgnoreCase(request.title());
+			boolean authorMatched = existing.getAuthor().equalsIgnoreCase(request.author());
+			
+			if(!titleMatched || !authorMatched) {
 				throw new RuntimeException("ISBN mismatch: Book Title or Author does not match existing records");
 			}
-		}
-		return bookRepository.save(book);
+		});
+
+
+		Book newBook = new Book();
+		newBook.setTitle(request.title());
+		newBook.setIsbn(request.isbn());
+		newBook.setAvailable(true);
+		newBook.setAuthor(request.author());
+		return bookRepository.save(newBook);
+
+
+
 	}
-	
+
+	@Transactional(readOnly = true)
 	public Book getAvailableBook(Long bookid) {
-		
-		Book book = bookRepository.findById(bookid).stream().filter(Book::isAvailable).findFirst().orElseThrow(() -> new RuntimeException("Book is not available"));
+		Book book = bookRepository.findByIdAndIsAvailableTrue(bookid).orElseThrow(() -> new RuntimeException("Book is not available"));
 		return book;
 	}
-	
-	public void setBookAvailability(Book book, boolean isAvailable) {
-		if(book.getId() == null) {
-			throw new RuntimeException("Book does not exist");
-		}
-		book.setAvailable(isAvailable);
-		bookRepository.save(book);
-		
-	}
-	
+
+
+
+	@Transactional
 	public void setBookAvailabilityById(Long id, boolean isAvailable) {
-		Book book = bookRepository.findById(id).stream().findFirst().orElseThrow(() -> new RuntimeException("Book does not exist"));
+		Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book does not exist"));
 		book.setAvailable(isAvailable);
 		bookRepository.save(book);
 		
