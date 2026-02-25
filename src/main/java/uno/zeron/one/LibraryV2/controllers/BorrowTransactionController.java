@@ -1,11 +1,12 @@
 package uno.zeron.one.LibraryV2.controllers;
 
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import uno.zeron.one.LibraryV2.dto.BorrowTransactionRequest;
 import uno.zeron.one.LibraryV2.entities.BorrowTransaction;
 import uno.zeron.one.LibraryV2.services.BorrowTransactionService;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class BorrowTransactionController {
 
 
@@ -21,7 +23,7 @@ public class BorrowTransactionController {
 
 
     @PostMapping("/borrowBook")
-    public ResponseEntity<BorrowTransaction> borrowBook(BorrowTransactionRequest request){
+    public ResponseEntity<BorrowTransaction> borrowBook(@Valid @RequestBody BorrowTransactionRequest request){
         return ResponseEntity.ok(borrowTransactionService.borrowBook(request));
     }
 
@@ -37,8 +39,8 @@ public class BorrowTransactionController {
         return ResponseEntity.ok(borrowTransactionService.getBorrowTransactionHistory());
     }
 
-    @PostMapping("/returnBook")
-    public ResponseEntity<BorrowTransaction> returnBook(Long bookId){
+    @PostMapping("/returnBook/{bookId}")
+    public ResponseEntity<BorrowTransaction> returnBook(@Positive(message = "Book ID must be greater than 0") @PathVariable Long bookId){
         return  ResponseEntity.ok(borrowTransactionService.returnBook(bookId));
     }
 

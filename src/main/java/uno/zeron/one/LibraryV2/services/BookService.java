@@ -64,7 +64,17 @@ public class BookService {
 		Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book does not exist"));
 		book.setAvailable(isAvailable);
 		bookRepository.save(book);
-		
+
+	}
+
+	@Transactional
+	public void setBookAvailability(Book book, boolean isAvailable) {
+		if(book.getId() == null){
+			throw new RuntimeException("Book does not exist");
+		}
+		book.setAvailable(isAvailable);
+		bookRepository.save(book);
+
 	}
 	
 	

@@ -1,9 +1,10 @@
 package uno.zeron.one.LibraryV2.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public record BorrowTransactionRequest(
-		@NotBlank(message = "Book Id is required") Long bookId, 
-		@NotBlank(message = "Borrower Id is required") Long borrowerId) {
+		@Positive(message = "Book ID must be greater than 0") @NotNull(message = "Book Id is required") Long bookId,
+		@Positive(message = "Book ID must be greater than 0") @NotNull(message = "Borrower Id is required") Long borrowerId) {
 
 }

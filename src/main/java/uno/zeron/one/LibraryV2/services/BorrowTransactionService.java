@@ -26,7 +26,7 @@ public class BorrowTransactionService {
 
 		Book book = bookService.getAvailableBook(bt.bookId());
 		Borrower borrower = borrowerService.findById(bt.borrowerId());
-		bookService.setBookAvailabilityById(book.getId(), false);
+		bookService.setBookAvailability(book, false);
 
 		BorrowTransaction bookTransaction = new BorrowTransaction();
 		bookTransaction.setBook(book);
@@ -41,7 +41,7 @@ public class BorrowTransactionService {
 	@Transactional
 	public BorrowTransaction returnBook(Long id) {
 		BorrowTransaction exist = btRepository.findByBookIdAndReturnDateIsNull(id).orElseThrow(() -> new RuntimeException("Book is not borrowed"));
-		bookService.setBookAvailabilityById(id, true);
+		bookService.setBookAvailability(exist.getBook(), true);
 		exist.setReturnDate(LocalDate.now());
 		btRepository.save(exist);
 		return exist;
