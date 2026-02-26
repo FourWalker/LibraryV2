@@ -1,6 +1,7 @@
 package uno.zeron.one.LibraryV2.controllers;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ public class BorrowerController {
     private final BorrowerService borrowerService;
 
     @PostMapping("/addBorrower")
-    public ResponseEntity<Borrower> addBorrower(@RequestBody Borrower borrower) {
+    public ResponseEntity<Borrower> addBorrower(@Valid @RequestBody Borrower borrower) {
         return ResponseEntity.ok(borrowerService.registerNewBorrower(borrower));
     }
 

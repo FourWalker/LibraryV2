@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uno.zeron.one.LibraryV2.dto.book.BookRegistrationRequest;
 import uno.zeron.one.LibraryV2.entities.Book;
+import uno.zeron.one.LibraryV2.exception.BusinessLogicException;
+import uno.zeron.one.LibraryV2.exception.ResourceNotFoundException;
 import uno.zeron.one.LibraryV2.repositories.BookRepository;
 
 import java.util.List;
@@ -35,7 +37,7 @@ public class BookService {
 			boolean authorMatched = existing.getAuthor().equalsIgnoreCase(request.author());
 			
 			if(!titleMatched || !authorMatched) {
-				throw new RuntimeException("ISBN mismatch: Book Title or Author does not match existing records");
+				throw new BusinessLogicException("ISBN mismatch: Book Title or Author does not match existing records");
 			}
 		});
 
@@ -53,7 +55,7 @@ public class BookService {
 
 	@Transactional(readOnly = true)
 	public Book getAvailableBook(Long bookid) {
-		Book book = bookRepository.findByIdAndIsAvailableTrue(bookid).orElseThrow(() -> new RuntimeException("Book is not available"));
+		Book book = bookRepository.findByIdAndIsAvailableTrue(bookid).orElseThrow(() -> new BusinessLogicException("Book is not available"));
 		return book;
 	}
 
@@ -61,7 +63,7 @@ public class BookService {
 
 	@Transactional
 	public void setBookAvailabilityById(Long id, boolean isAvailable) {
-		Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book does not exist"));
+		Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book does not exist"));
 		book.setAvailable(isAvailable);
 		bookRepository.save(book);
 
@@ -70,7 +72,7 @@ public class BookService {
 	@Transactional
 	public void setBookAvailability(Book book, boolean isAvailable) {
 		if(book.getId() == null){
-			throw new RuntimeException("Book does not exist");
+			throw new ResourceNotFoundException("Book does not exist");
 		}
 		book.setAvailable(isAvailable);
 		bookRepository.save(book);

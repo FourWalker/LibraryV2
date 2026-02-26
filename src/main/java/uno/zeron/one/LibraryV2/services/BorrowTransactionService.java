@@ -7,6 +7,7 @@ import uno.zeron.one.LibraryV2.dto.BorrowTransactionRequest;
 import uno.zeron.one.LibraryV2.entities.Book;
 import uno.zeron.one.LibraryV2.entities.BorrowTransaction;
 import uno.zeron.one.LibraryV2.entities.Borrower;
+import uno.zeron.one.LibraryV2.exception.BusinessLogicException;
 import uno.zeron.one.LibraryV2.repositories.BorrowerTransactionRepository;
 
 import java.time.LocalDate;
@@ -40,7 +41,7 @@ public class BorrowTransactionService {
 
 	@Transactional
 	public BorrowTransaction returnBook(Long id) {
-		BorrowTransaction exist = btRepository.findByBookIdAndReturnDateIsNull(id).orElseThrow(() -> new RuntimeException("Book is not borrowed"));
+		BorrowTransaction exist = btRepository.findByBookIdAndReturnDateIsNull(id).orElseThrow(() -> new BusinessLogicException("Book is not borrowed"));
 		bookService.setBookAvailability(exist.getBook(), true);
 		exist.setReturnDate(LocalDate.now());
 		btRepository.save(exist);

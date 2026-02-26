@@ -1,5 +1,6 @@
 package uno.zeron.one.LibraryV2.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ public class BookController {
 	}
 	
 	@PostMapping("/addBook")
-    public ResponseEntity<Book> addBook(@RequestBody BookRegistrationRequest book) {
+    public ResponseEntity<Book> addBook(@Valid @RequestBody BookRegistrationRequest book) {
         return ResponseEntity.ok(bookService.registerNewBook(book));
     }
 	@GetMapping("/getAllAvailableBooks")

@@ -1,10 +1,12 @@
 package uno.zeron.one.LibraryV2.exception;
 
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -59,5 +61,19 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return new ResponseEntity<>(response, status);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        String message = "Malformed JSON request";
+
+        // Senior Tip: Try to extract the specific field and expected type
+        if (ex.getCause() instanceof InvalidFormatException ifx) {
+            String fieldName = ifx.getPath().get(0).getFieldName();
+            String targetType = ifx.getTargetType().getSimpleName();
+            message = String.format("Invalid value for field '%s'. Expected type: %s", fieldName, targetType);
+        }
+
+        return buildResponse(HttpStatus.BAD_REQUEST, "Malformed Request", message, request);
     }
 }
