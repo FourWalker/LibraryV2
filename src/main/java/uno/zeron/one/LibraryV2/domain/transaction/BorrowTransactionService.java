@@ -1,16 +1,17 @@
-package uno.zeron.one.LibraryV2.services;
+package uno.zeron.one.LibraryV2.domain.transaction;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uno.zeron.one.LibraryV2.dto.BorrowTransactionRequest;
-import uno.zeron.one.LibraryV2.entities.Book;
-import uno.zeron.one.LibraryV2.entities.BorrowTransaction;
-import uno.zeron.one.LibraryV2.entities.Borrower;
+import uno.zeron.one.LibraryV2.domain.book.BookEvent;
+import uno.zeron.one.LibraryV2.domain.book.BookService;
+import uno.zeron.one.LibraryV2.domain.borrower.BorrowerService;
+import uno.zeron.one.LibraryV2.domain.book.Book;
+import uno.zeron.one.LibraryV2.domain.borrower.Borrower;
 import uno.zeron.one.LibraryV2.exception.BusinessLogicException;
-import uno.zeron.one.LibraryV2.repositories.BorrowerTransactionRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,6 +37,16 @@ public class BorrowTransactionService {
 
 
 		btRepository.save(bookTransaction);
+
+		BookEvent event = new BookEvent(
+				bookTransaction.getBook().getId(),
+				bookTransaction.getBorrower().getId(),
+				"BORROWED",
+				LocalDateTime.now()
+		);
+
+
+
 		return bookTransaction;
 	}
 

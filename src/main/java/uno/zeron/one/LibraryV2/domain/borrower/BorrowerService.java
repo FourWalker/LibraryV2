@@ -1,12 +1,10 @@
-package uno.zeron.one.LibraryV2.services;
+package uno.zeron.one.LibraryV2.domain.borrower;
 
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-import uno.zeron.one.LibraryV2.entities.Borrower;
 import uno.zeron.one.LibraryV2.exception.BusinessLogicException;
 import uno.zeron.one.LibraryV2.exception.ResourceNotFoundException;
-import uno.zeron.one.LibraryV2.repositories.BorrowerRepository;
 
 import java.util.List;
 

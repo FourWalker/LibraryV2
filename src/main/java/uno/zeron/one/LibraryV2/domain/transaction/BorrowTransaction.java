@@ -1,4 +1,4 @@
-package uno.zeron.one.LibraryV2.entities;
+package uno.zeron.one.LibraryV2.domain.transaction;
 
 import java.time.LocalDate;
 
@@ -11,6 +11,8 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import uno.zeron.one.LibraryV2.domain.book.Book;
+import uno.zeron.one.LibraryV2.domain.borrower.Borrower;
 
 
 @Entity

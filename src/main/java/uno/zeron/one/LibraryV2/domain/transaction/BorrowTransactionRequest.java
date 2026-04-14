@@ -1,4 +1,4 @@
-package uno.zeron.one.LibraryV2.dto;
+package uno.zeron.one.LibraryV2.domain.transaction;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

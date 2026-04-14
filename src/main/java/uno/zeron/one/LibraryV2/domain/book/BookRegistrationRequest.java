@@ -1,4 +1,4 @@
-package uno.zeron.one.LibraryV2.dto.book;
+package uno.zeron.one.LibraryV2.domain.book;
 
 import jakarta.validation.constraints.NotBlank;
 

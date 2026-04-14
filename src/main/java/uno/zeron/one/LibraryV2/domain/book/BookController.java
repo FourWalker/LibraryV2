@@ -1,4 +1,4 @@
-package uno.zeron.one.LibraryV2.controllers;
+package uno.zeron.one.LibraryV2.domain.book;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -6,10 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import uno.zeron.one.LibraryV2.dto.book.BookRegistrationRequest;
-import uno.zeron.one.LibraryV2.entities.Book;
-import uno.zeron.one.LibraryV2.services.BookService;
 
 import java.util.List;
 

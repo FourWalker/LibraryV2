@@ -1,12 +1,9 @@
-package uno.zeron.one.LibraryV2.services;
+package uno.zeron.one.LibraryV2.domain.book;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uno.zeron.one.LibraryV2.dto.book.BookRegistrationRequest;
-import uno.zeron.one.LibraryV2.entities.Book;
 import uno.zeron.one.LibraryV2.exception.BusinessLogicException;
 import uno.zeron.one.LibraryV2.exception.ResourceNotFoundException;
-import uno.zeron.one.LibraryV2.repositories.BookRepository;
 
 import java.util.List;
 

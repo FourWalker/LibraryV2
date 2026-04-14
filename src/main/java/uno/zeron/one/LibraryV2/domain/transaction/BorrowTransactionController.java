@@ -1,4 +1,4 @@
-package uno.zeron.one.LibraryV2.controllers;
+package uno.zeron.one.LibraryV2.domain.transaction;
 
 
 import jakarta.validation.Valid;
@@ -7,9 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import uno.zeron.one.LibraryV2.dto.BorrowTransactionRequest;
-import uno.zeron.one.LibraryV2.entities.BorrowTransaction;
-import uno.zeron.one.LibraryV2.services.BorrowTransactionService;
 
 import java.util.List;
 

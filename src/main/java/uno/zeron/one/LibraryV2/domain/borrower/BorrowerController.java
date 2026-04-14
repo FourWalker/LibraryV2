@@ -1,4 +1,4 @@
-package uno.zeron.one.LibraryV2.controllers;
+package uno.zeron.one.LibraryV2.domain.borrower;
 
 
 import jakarta.validation.Valid;
@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import uno.zeron.one.LibraryV2.entities.Borrower;
-import uno.zeron.one.LibraryV2.services.BorrowerService;
 
 import java.util.List;
 
